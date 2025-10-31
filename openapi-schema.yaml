@@ -313,14 +313,100 @@ components:
         Kupna_cena_EUR:
           type: number
           nullable: true
+        Vlastne_zdroje_EUR:
+          type: number
+          nullable: true
+        Uver_vyska_EUR:
+          type: number
+          nullable: true
+        Znalec_EUR:
+          type: number
+          nullable: true
+          description: Náklad na znalca pri kúpe
+        Pravnik_EUR:
+          type: number
+          nullable: true
+          description: Náklad na právnika pri kúpe
+        Dan_z_prevodu_EUR:
+          type: number
+          nullable: true
+          description: Daň z prevodu nehnuteľnosti
+        Realitna_provisia_EUR:
+          type: number
+          nullable: true
+          description: Realitná provízia
+        Renovacia_vstup_EUR:
+          type: number
+          nullable: true
+          description: Náklady na renováciu pri vstupe
+        Jednorazove_naklady_EUR:
+          type: number
+          nullable: true
+          description: Súčet jednorazových nákladov (automaticky vypočítané)
+        Celkova_investicia_EUR:
+          type: number
+          nullable: true
+          description: Kúpna cena + jednorazové náklady (automaticky vypočítané)
+        Urokova_sadzba_p_a_percent:
+          type: number
+          nullable: true
+        Pocet_rokov_uveru:
+          type: number
+          nullable: true
+        Banka:
+          type: string
+        Datum_zaciatku_uveru:
+          type: string
+        Mesacna_splatka_uveru_EUR:
+          type: number
+          nullable: true
+        Druzstvo_EUR:
+          type: number
+          nullable: true
+        Elektrina_EUR:
+          type: number
+          nullable: true
+        Plyn_EUR:
+          type: number
+          nullable: true
+        Voda_EUR:
+          type: number
+          nullable: true
+        Internet_EUR:
+          type: number
+          nullable: true
+        Ostatne_naklady_EUR:
+          type: number
+          nullable: true
+        Celkove_mesacne_naklady_bez_uveru_EUR:
+          type: number
+          nullable: true
         Najom_brutto_EUR:
           type: number
           nullable: true
+        Cashflow_mesacne_EUR:
+          type: number
+          nullable: true
+        Rocna_hruba_vynosnost_percent:
+          type: number
+          nullable: true
+          description: Ročná výnosnosť v % (počíta sa z celkovej investície)
         Najomnik_meno:
           type: string
         Najomnik_telefon:
           type: string
         Najomnik_email:
+          type: string
+        Zmluva_od:
+          type: string
+        Zmluva_do:
+          type: string
+        Vyska_depozitu_EUR:
+          type: number
+          nullable: true
+        Stav_platieb:
+          type: string
+        Poznamka:
           type: string
 
     ApartmentInput:
@@ -350,16 +436,34 @@ components:
         Uver_vyska_EUR:
           type: number
           description: Výška úveru v EUR
-        Urokova_sadzba:
+        Znalec_EUR:
           type: number
-          description: Úroková sadzba v %
+          description: Náklad na znalca pri kúpe
+        Pravnik_EUR:
+          type: number
+          description: Náklad na právnika pri kúpe
+        Dan_z_prevodu_EUR:
+          type: number
+          description: Daň z prevodu nehnuteľnosti
+        Realitna_provisia_EUR:
+          type: number
+          description: Realitná provízia
+        Renovacia_vstup_EUR:
+          type: number
+          description: Náklady na renováciu pri vstupe
+        Urokova_sadzba_p_a_percent:
+          type: number
+          description: Úroková sadzba p.a. v %
         Pocet_rokov_uveru:
           type: number
           description: Počet rokov úveru
         Banka:
           type: string
           description: Názov banky
-        Mesacna_splatka_EUR:
+        Datum_zaciatku_uveru:
+          type: string
+          description: Dátum začiatku úveru
+        Mesacna_splatka_uveru_EUR:
           type: number
           description: Mesačná splátka v EUR
         Druzstvo_EUR:
@@ -371,12 +475,42 @@ components:
         Plyn_EUR:
           type: number
           description: Mesačné náklady na plyn v EUR
+        Voda_EUR:
+          type: number
+          description: Mesačné náklady na vodu v EUR
+        Internet_EUR:
+          type: number
+          description: Mesačné náklady na internet v EUR
+        Ostatne_naklady_EUR:
+          type: number
+          description: Ostatné mesačné náklady v EUR
         Najom_brutto_EUR:
           type: number
           description: Mesačný nájom brutto v EUR
         Najomnik_meno:
           type: string
           description: Meno nájomníka
+        Najomnik_telefon:
+          type: string
+          description: Telefónne číslo nájomníka
+        Najomnik_email:
+          type: string
+          description: Email nájomníka
+        Zmluva_od:
+          type: string
+          description: Dátum začiatku zmluvy
+        Zmluva_do:
+          type: string
+          description: Dátum konca zmluvy
+        Vyska_depozitu_EUR:
+          type: number
+          description: Výška depozitu v EUR
+        Stav_platieb:
+          type: string
+          description: Stav platieb (napr. OK, OMEŠKANIE)
+        Poznamka:
+          type: string
+          description: Poznámka
 
     ApartmentUpdate:
       type: object

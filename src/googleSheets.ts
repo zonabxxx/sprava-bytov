@@ -8,8 +8,11 @@ dotenv.config();
 let credentials;
 
 // Priorita: Base64 encoded credentials (funguje lepšie v Railway/Vercel)
-if (process.env.GOOGLE_CREDENTIALS_BASE64) {
-  const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString();
+// Podporujeme oba názvy: GOOGLE_CREDENTIALS_BASE64 aj GOOGLE_SERVICE_ACCOUNT_BASE64
+const base64Creds = process.env.GOOGLE_CREDENTIALS_BASE64 || process.env.GOOGLE_SERVICE_ACCOUNT_BASE64;
+
+if (base64Creds) {
+  const decoded = Buffer.from(base64Creds, 'base64').toString();
   credentials = JSON.parse(decoded);
 } else {
   // Fallback: Samostatné premenné

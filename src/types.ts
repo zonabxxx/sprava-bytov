@@ -9,22 +9,29 @@ export interface Apartment {
   Kupna_cena_EUR: number | null;
   Vlastne_zdroje_EUR: number | null;
   Uver_vyska_EUR: number | null;
-  Urokova_sadzba: number | null;
+  Urokova_sadzba_p_a_percent: number | null;
   Pocet_rokov_uveru: number | null;
   Banka: string;
-  Datum_zaciatku: string;
-  Mesacna_splatka_EUR: number | null;
+  Datum_zaciatku_uveru: string;
+  Mesacna_splatka_uveru_EUR: number | null;
   Druzstvo_EUR: number | null;
   Elektrina_EUR: number | null;
   Plyn_EUR: number | null;
+  Voda_EUR: number | null;
+  Internet_EUR: number | null;
   Ostatne_naklady_EUR: number | null;
-  Celkove_mesacne_naklady_EUR: number | null;
+  Celkove_mesacne_naklady_bez_uveru_EUR: number | null;
   Najom_brutto_EUR: number | null;
-  Cashflow_mesacny_EUR: number | null;
-  Rocna_hruba_vynosnost: number | null;
+  Cashflow_mesacne_EUR: number | null;
+  Rocna_hruba_vynosnost_percent: number | null;
   Najomnik_meno: string;
   Najomnik_telefon: string;
   Najomnik_email: string;
+  Zmluva_od: string;
+  Zmluva_do: string;
+  Vyska_depozitu_EUR: number | null;
+  Stav_platieb: string;
+  Poznamka: string;
 }
 
 // Čiastočný update bytu (PATCH)
@@ -61,22 +68,29 @@ export const COLUMN_MAP: Record<keyof Apartment, number> = {
   Kupna_cena_EUR: 6,
   Vlastne_zdroje_EUR: 7,
   Uver_vyska_EUR: 8,
-  Urokova_sadzba: 9,
+  Urokova_sadzba_p_a_percent: 9,
   Pocet_rokov_uveru: 10,
   Banka: 11,
-  Datum_zaciatku: 12,
-  Mesacna_splatka_EUR: 13,
+  Datum_zaciatku_uveru: 12,
+  Mesacna_splatka_uveru_EUR: 13,
   Druzstvo_EUR: 14,
   Elektrina_EUR: 15,
   Plyn_EUR: 16,
-  Ostatne_naklady_EUR: 17,
-  Celkove_mesacne_naklady_EUR: 18,
-  Najom_brutto_EUR: 19,
-  Cashflow_mesacny_EUR: 20,
-  Rocna_hruba_vynosnost: 21,
-  Najomnik_meno: 22,
-  Najomnik_telefon: 23,
-  Najomnik_email: 24,
+  Voda_EUR: 17,
+  Internet_EUR: 18,
+  Ostatne_naklady_EUR: 19,
+  Celkove_mesacne_naklady_bez_uveru_EUR: 20,
+  Najom_brutto_EUR: 21,
+  Cashflow_mesacne_EUR: 22,
+  Rocna_hruba_vynosnost_percent: 23,
+  Najomnik_meno: 24,
+  Najomnik_telefon: 25,
+  Najomnik_email: 26,
+  Zmluva_od: 27,
+  Zmluva_do: 28,
+  Vyska_depozitu_EUR: 29,
+  Stav_platieb: 30,
+  Poznamka: 31,
 };
 
 // Helper: konverzia čísla stĺpca na písmeno (0=A, 1=B, ...)

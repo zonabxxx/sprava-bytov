@@ -144,6 +144,147 @@ paths:
         '404':
           description: Nájomník nenájdený
 
+  /columns:
+    get:
+      summary: Získať zoznam všetkých stĺpcov v tabuľke
+      operationId: getColumns
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Zoznam stĺpcov
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Počet stĺpcov
+                  columns:
+                    type: array
+                    items:
+                      type: string
+                    description: Názvy stĺpcov
+        '500':
+          description: Chyba servera
+    
+    post:
+      summary: Pridať nový stĺpec do tabuľky
+      operationId: addColumn
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - columnName
+              properties:
+                columnName:
+                  type: string
+                  description: Názov nového stĺpca
+              example:
+                columnName: "Čistá výnosnosť"
+      responses:
+        '201':
+          description: Stĺpec bol úspešne pridaný
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  columnName:
+                    type: string
+        '400':
+          description: Neplatný request
+        '409':
+          description: Stĺpec už existuje
+        '500':
+          description: Chyba servera
+
+  /columns/{oldName}:
+    patch:
+      summary: Premenovať existujúci stĺpec
+      operationId: renameColumn
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: oldName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Aktuálny názov stĺpca
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - newName
+              properties:
+                newName:
+                  type: string
+                  description: Nový názov stĺpca
+              example:
+                newName: "Ročná výnosnosť (%)"
+      responses:
+        '200':
+          description: Stĺpec bol úspešne premenovaný
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  oldName:
+                    type: string
+                  newName:
+                    type: string
+        '400':
+          description: Neplatný request
+        '404':
+          description: Stĺpec nebol nájdený
+        '500':
+          description: Chyba servera
+
+  /columns/{columnName}:
+    delete:
+      summary: Vymazať obsah stĺpca
+      operationId: deleteColumn
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: columnName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Názov stĺpca na vymazanie
+      responses:
+        '200':
+          description: Stĺpec bol úspešne vymazaný
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  columnName:
+                    type: string
+        '404':
+          description: Stĺpec nebol nájdený
+        '500':
+          description: Chyba servera
+
 components:
   securitySchemes:
     ApiKeyAuth:

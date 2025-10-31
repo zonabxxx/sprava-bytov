@@ -178,3 +178,98 @@ export async function findRowIndexByBytId(bytId: string): Promise<number | null>
   return index + 2;
 }
 
+// Načíta názvy stĺpcov z prvého riadku (header)
+export async function getColumnHeaders(): Promise<string[]> {
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SHEET_ID,
+      range: `${SHEET_NAME}!1:1`, // Prvý riadok (header)
+    });
+
+    const headers = response.data.values?.[0] || [];
+    return headers;
+  } catch (error) {
+    console.error('Chyba pri čítaní hlavičky z Google Sheets:', error);
+    throw new Error('Nepodarilo sa načítať hlavičku tabuľky');
+  }
+}
+
+// Pridá nový stĺpec na koniec tabuľky
+export async function addColumn(columnName: string): Promise<void> {
+  try {
+    // Najprv získame aktuálne hlavičky
+    const headers = await getColumnHeaders();
+    
+    // Skontrolujeme, či stĺpec už existuje
+    if (headers.includes(columnName)) {
+      throw new Error(`Stĺpec "${columnName}" už existuje v tabuľke`);
+    }
+    
+    // Nájdeme prvý prázdny stĺpec
+    const nextColIndex = headers.length;
+    const colLetter = columnNumberToLetter(nextColIndex);
+    
+    // Pridáme hlavičku nového stĺpca
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SHEET_ID,
+      range: `${SHEET_NAME}!${colLetter}1`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [[columnName]],
+      },
+    });
+  } catch (error) {
+    console.error('Chyba pri pridávaní stĺpca do Google Sheets:', error);
+    throw error;
+  }
+}
+
+// Premenuje existujúci stĺpec
+export async function renameColumn(oldName: string, newName: string): Promise<void> {
+  try {
+    const headers = await getColumnHeaders();
+    const colIndex = headers.indexOf(oldName);
+    
+    if (colIndex === -1) {
+      throw new Error(`Stĺpec "${oldName}" neexistuje v tabuľke`);
+    }
+    
+    const colLetter = columnNumberToLetter(colIndex);
+    
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SHEET_ID,
+      range: `${SHEET_NAME}!${colLetter}1`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [[newName]],
+      },
+    });
+  } catch (error) {
+    console.error('Chyba pri premenovaní stĺpca v Google Sheets:', error);
+    throw error;
+  }
+}
+
+// Zmaže stĺpec (vymaže len obsah, nie celý stĺpec)
+export async function clearColumn(columnName: string): Promise<void> {
+  try {
+    const headers = await getColumnHeaders();
+    const colIndex = headers.indexOf(columnName);
+    
+    if (colIndex === -1) {
+      throw new Error(`Stĺpec "${columnName}" neexistuje v tabuľke`);
+    }
+    
+    const colLetter = columnNumberToLetter(colIndex);
+    
+    // Vymažeme celý stĺpec (vrátane hlavičky)
+    await sheets.spreadsheets.values.clear({
+      spreadsheetId: SHEET_ID,
+      range: `${SHEET_NAME}!${colLetter}:${colLetter}`,
+    });
+  } catch (error) {
+    console.error('Chyba pri mazaní stĺpca v Google Sheets:', error);
+    throw error;
+  }
+}
+

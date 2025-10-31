@@ -8,6 +8,10 @@ import {
   findRowIndexByBytId,
   updateRow,
   getSheetMeta,
+  getColumnHeaders,
+  addColumn,
+  renameColumn,
+  clearColumn,
 } from './googleSheets';
 import { Apartment, PartialApartment, StatsSummary, Tenant } from './types';
 import { calcMonthlyCosts, calcMonthlyCashflow, calcAnnualYield } from './calculations';
@@ -259,6 +263,95 @@ app.get('/meta', async (req: Request, res: Response) => {
     res.json(meta);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// ========================================
+// ENDPOINTY PRE STĹPCE
+// ========================================
+
+// GET /columns - vráti zoznam všetkých stĺpcov (hlavičky) v tabuľke
+app.get('/columns', apiKeyAuth, async (req: Request, res: Response) => {
+  try {
+    const headers = await getColumnHeaders();
+    res.json({ 
+      count: headers.length,
+      columns: headers 
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /columns - pridá nový stĺpec do tabuľky
+app.post('/columns', apiKeyAuth, async (req: Request, res: Response) => {
+  try {
+    const { columnName } = req.body;
+    
+    if (!columnName || typeof columnName !== 'string') {
+      res.status(400).json({ error: 'Chýba parameter "columnName" (string)' });
+      return;
+    }
+    
+    await addColumn(columnName);
+    
+    res.status(201).json({ 
+      message: `Stĺpec "${columnName}" bol úspešne pridaný`,
+      columnName 
+    });
+  } catch (error: any) {
+    if (error.message.includes('už existuje')) {
+      res.status(409).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
+// PATCH /columns/:oldName - premenuje existujúci stĺpec
+app.patch('/columns/:oldName', apiKeyAuth, async (req: Request, res: Response) => {
+  try {
+    const { oldName } = req.params;
+    const { newName } = req.body;
+    
+    if (!newName || typeof newName !== 'string') {
+      res.status(400).json({ error: 'Chýba parameter "newName" (string)' });
+      return;
+    }
+    
+    await renameColumn(oldName, newName);
+    
+    res.json({ 
+      message: `Stĺpec "${oldName}" bol premenovaný na "${newName}"`,
+      oldName,
+      newName
+    });
+  } catch (error: any) {
+    if (error.message.includes('neexistuje')) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
+// DELETE /columns/:columnName - vymaže obsah stĺpca (ale nechá hlavičku)
+app.delete('/columns/:columnName', apiKeyAuth, async (req: Request, res: Response) => {
+  try {
+    const { columnName } = req.params;
+    
+    await clearColumn(columnName);
+    
+    res.json({ 
+      message: `Stĺpec "${columnName}" bol vymazaný`,
+      columnName 
+    });
+  } catch (error: any) {
+    if (error.message.includes('neexistuje')) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 

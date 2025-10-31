@@ -1,0 +1,165 @@
+### Tento súbor obsahuje ukážkové HTTP requesty pre testovanie API
+### Môžeš ho použiť s VS Code REST Client extension alebo podobnými nástrojmi
+
+### ============================================
+### NASTAVENIE - ZMEŇ TIETO HODNOTY
+### ============================================
+
+@baseUrl = http://localhost:3000
+@apiKey = tvoj_tajny_api_kluc
+
+### ============================================
+### HEALTH CHECK
+### ============================================
+
+### Health check
+GET {{baseUrl}}/health
+x-api-key: {{apiKey}}
+
+### ============================================
+### APARTMENTS - ZÁKLADNÉ OPERÁCIE
+### ============================================
+
+### 1. Získať všetky byty
+GET {{baseUrl}}/apartments
+x-api-key: {{apiKey}}
+
+### 2. Získať konkrétny byt (BYT-001)
+GET {{baseUrl}}/apartments/BYT-001
+x-api-key: {{apiKey}}
+
+### 3. Pridať nový byt (s automatickým ID)
+POST {{baseUrl}}/apartments
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Adresa_ulica": "Testovacia 999",
+  "Mesto": "Prešov",
+  "PSC": "08001",
+  "Typ_bytu": "2-izbový",
+  "Rozloha_m2": 60,
+  "Kupna_cena_EUR": 95000,
+  "Vlastne_zdroje_EUR": 25000,
+  "Uver_vyska_EUR": 70000,
+  "Urokova_sadzba": 3.5,
+  "Pocet_rokov_uveru": 20,
+  "Banka": "ČSOB",
+  "Datum_zaciatku": "01.11.2024",
+  "Mesacna_splatka_EUR": 400,
+  "Druzstvo_EUR": 70,
+  "Elektrina_EUR": 35,
+  "Plyn_EUR": 45,
+  "Ostatne_naklady_EUR": 25,
+  "Najom_brutto_EUR": 700,
+  "Najomnik_meno": "Lucia Takáčová",
+  "Najomnik_telefon": "+421908111222",
+  "Najomnik_email": "lucia.takacova@example.com"
+}
+
+### 4. Pridať nový byt (s vlastným ID)
+POST {{baseUrl}}/apartments
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Byt_ID": "BYT-999",
+  "Adresa_ulica": "Vinohradská 111",
+  "Mesto": "Nitra",
+  "PSC": "94901",
+  "Typ_bytu": "1-izbový",
+  "Kupna_cena_EUR": 75000,
+  "Najom_brutto_EUR": 450
+}
+
+### 5. Aktualizovať nájom v byte BYT-001
+PATCH {{baseUrl}}/apartments/BYT-001
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Najom_brutto_EUR": 850
+}
+
+### 6. Aktualizovať nájomníka v byte BYT-002
+PATCH {{baseUrl}}/apartments/BYT-002
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Najomnik_meno": "Nový Nájomník",
+  "Najomnik_telefon": "+421901999888",
+  "Najomnik_email": "novy.najomnik@example.com"
+}
+
+### 7. Aktualizovať viacero polí naraz
+PATCH {{baseUrl}}/apartments/BYT-003
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Najom_brutto_EUR": 1000,
+  "Druzstvo_EUR": 120,
+  "Elektrina_EUR": 55
+}
+
+### ============================================
+### ŠTATISTIKY
+### ============================================
+
+### Získať súhrnné finančné štatistiky
+GET {{baseUrl}}/stats/summary
+x-api-key: {{apiKey}}
+
+### ============================================
+### NÁJOMNÍCI
+### ============================================
+
+### Získať všetkých nájomníkov
+GET {{baseUrl}}/tenants
+x-api-key: {{apiKey}}
+
+### Vyhľadať nájomníka podľa mena (Novák)
+GET {{baseUrl}}/tenants/Novák
+x-api-key: {{apiKey}}
+
+### Vyhľadať nájomníka podľa časti mena (case-insensitive)
+GET {{baseUrl}}/tenants/eva
+x-api-key: {{apiKey}}
+
+### ============================================
+### METADATA
+### ============================================
+
+### Získať metadata o Google Sheets tabuľke
+GET {{baseUrl}}/meta
+x-api-key: {{apiKey}}
+
+### ============================================
+### CHYBOVÉ STAVY - TESTOVANIE
+### ============================================
+
+### Test: Neplatný API kľúč (očakávaný status 401)
+GET {{baseUrl}}/apartments
+x-api-key: nespravny_kluc
+
+### Test: Chýbajúci API kľúč (očakávaný status 401)
+GET {{baseUrl}}/apartments
+
+### Test: Neexistujúci byt (očakávaný status 404)
+GET {{baseUrl}}/apartments/BYT-999999
+x-api-key: {{apiKey}}
+
+### Test: Neexistujúci nájomník (očakávaný status 404)
+GET {{baseUrl}}/tenants/NeexistujuceXYZ
+x-api-key: {{apiKey}}
+
+### Test: Pokus o zmenu Byt_ID (očakávaný status 400)
+PATCH {{baseUrl}}/apartments/BYT-001
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "Byt_ID": "BYT-999"
+}
+

@@ -1,0 +1,276 @@
+openapi: 3.0.0
+info:
+  title: Správa Bytov API
+  description: REST API pre správu bytov, nájomníkov a finančných štatistík cez Google Sheets
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Lokálny development server
+
+paths:
+  /apartments:
+    get:
+      summary: Získať všetky byty
+      description: Vráti zoznam všetkých bytov z Google Sheets
+      operationId: getApartments
+      responses:
+        '200':
+          description: Zoznam bytov
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Apartment'
+    post:
+      summary: Pridať nový byt
+      description: Pridá nový byt do Google Sheets
+      operationId: addApartment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApartmentInput'
+      responses:
+        '201':
+          description: Byt úspešne pridaný
+
+  /apartments/{id}:
+    get:
+      summary: Získať konkrétny byt
+      description: Vráti detail bytu podľa Byt_ID
+      operationId: getApartmentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID bytu (napr. BYT-001)
+      responses:
+        '200':
+          description: Detail bytu
+        '404':
+          description: Byt nenájdený
+    patch:
+      summary: Aktualizovať byt
+      description: Aktualizuje vybrané polia konkrétneho bytu
+      operationId: updateApartment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApartmentUpdate'
+      responses:
+        '200':
+          description: Byt úspešne aktualizovaný
+
+  /stats/summary:
+    get:
+      summary: Získať finančné štatistiky
+      description: Vráti agregované štatistiky všetkých bytov (cashflow, výnosnosť, náklady)
+      operationId: getStatsSummary
+      responses:
+        '200':
+          description: Finančné štatistiky
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsSummary'
+
+  /tenants:
+    get:
+      summary: Získať všetkých nájomníkov
+      description: Vráti zoznam všetkých nájomníkov s informáciami o byte
+      operationId: getTenants
+      responses:
+        '200':
+          description: Zoznam nájomníkov
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tenant'
+
+  /tenants/{name}:
+    get:
+      summary: Vyhľadať nájomníka
+      description: Vyhľadá nájomníka podľa mena (case-insensitive)
+      operationId: searchTenant
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Meno alebo časť mena nájomníka
+      responses:
+        '200':
+          description: Nájdený nájomník/nájomníci
+        '404':
+          description: Nájomník nenájdený
+
+components:
+  schemas:
+    Apartment:
+      type: object
+      properties:
+        Byt_ID:
+          type: string
+          description: Unikátne ID bytu (napr. BYT-001)
+        Adresa_ulica:
+          type: string
+        Mesto:
+          type: string
+        PSC:
+          type: string
+        Typ_bytu:
+          type: string
+        Rozloha_m2:
+          type: number
+          nullable: true
+        Kupna_cena_EUR:
+          type: number
+          nullable: true
+        Najom_brutto_EUR:
+          type: number
+          nullable: true
+        Najomnik_meno:
+          type: string
+        Najomnik_telefon:
+          type: string
+        Najomnik_email:
+          type: string
+
+    ApartmentInput:
+      type: object
+      properties:
+        Adresa_ulica:
+          type: string
+          description: Ulica a číslo
+        Mesto:
+          type: string
+          description: Mesto
+        PSC:
+          type: string
+          description: PSČ
+        Typ_bytu:
+          type: string
+          description: Typ bytu (napr. 2-izbový)
+        Rozloha_m2:
+          type: number
+          description: Rozloha v m2
+        Kupna_cena_EUR:
+          type: number
+          description: Kúpna cena v EUR
+        Vlastne_zdroje_EUR:
+          type: number
+          description: Vlastné zdroje v EUR
+        Uver_vyska_EUR:
+          type: number
+          description: Výška úveru v EUR
+        Urokova_sadzba:
+          type: number
+          description: Úroková sadzba v %
+        Pocet_rokov_uveru:
+          type: number
+          description: Počet rokov úveru
+        Banka:
+          type: string
+          description: Názov banky
+        Mesacna_splatka_EUR:
+          type: number
+          description: Mesačná splátka v EUR
+        Druzstvo_EUR:
+          type: number
+          description: Mesačné náklady na družstvo v EUR
+        Elektrina_EUR:
+          type: number
+          description: Mesačné náklady na elektrinu v EUR
+        Plyn_EUR:
+          type: number
+          description: Mesačné náklady na plyn v EUR
+        Najom_brutto_EUR:
+          type: number
+          description: Mesačný nájom brutto v EUR
+        Najomnik_meno:
+          type: string
+          description: Meno nájomníka
+
+    ApartmentUpdate:
+      type: object
+      properties:
+        Najom_brutto_EUR:
+          type: number
+        Najomnik_meno:
+          type: string
+        Najomnik_telefon:
+          type: string
+        Najomnik_email:
+          type: string
+        Druzstvo_EUR:
+          type: number
+        Elektrina_EUR:
+          type: number
+        Plyn_EUR:
+          type: number
+
+    StatsSummary:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Počet bytov
+        totalPurchase:
+          type: number
+          description: Súčet kúpnych cien v EUR
+        totalMonthlyCosts:
+          type: number
+          description: Súčet mesačných nákladov v EUR
+        totalMonthlyRent:
+          type: number
+          description: Súčet mesačných nájmov v EUR
+        totalMonthlyCashflow:
+          type: number
+          description: Súčet mesačného cashflow v EUR
+        averageYield:
+          type: number
+          nullable: true
+          description: Priemerná ročná výnosnosť v %
+
+    Tenant:
+      type: object
+      properties:
+        meno:
+          type: string
+        telefon:
+          type: string
+        email:
+          type: string
+        byt_id:
+          type: string
+        vyska_najomu:
+          type: number
+        mesacne_naklady_bytu:
+          type: number
+

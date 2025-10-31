@@ -207,7 +207,7 @@ app.get('/stats/summary', async (req: Request, res: Response) => {
 });
 
 // 6. GET /tenants - vráti všetkých nájomcov
-app.get('/tenants', async (req: Request, res: Response) => {
+app.get('/tenants', apiKeyAuth, async (req: Request, res: Response) => {
   try {
     const apartments = await getRows();
 
@@ -230,7 +230,7 @@ app.get('/tenants', async (req: Request, res: Response) => {
 });
 
 // 7. GET /tenants/:name - vráti konkrétneho nájomníka (case-insensitive contains)
-app.get('/tenants/:name', async (req: Request, res: Response) => {
+app.get('/tenants/:name', apiKeyAuth, async (req: Request, res: Response) => {
   try {
     const { name } = req.params;
     const apartments = await getRows();

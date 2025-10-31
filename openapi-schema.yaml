@@ -393,6 +393,27 @@ components:
           type: number
         Kupna_cena_EUR:
           type: number
+        Znalec_EUR:
+          type: number
+          description: Náklad na znalca pri kúpe
+        Pravnik_EUR:
+          type: number
+          description: Náklad na právnika pri kúpe
+        Dan_z_prevodu_EUR:
+          type: number
+          description: Daň z prevodu nehnuteľnosti
+        Realitna_provisia_EUR:
+          type: number
+          description: Realitná provízia
+        Renovacia_vstup_EUR:
+          type: number
+          description: Náklady na renováciu pri vstupe
+        Jednorazove_naklady_EUR:
+          type: number
+          description: Súčet jednorazových nákladov (vypočítané)
+        Celkova_investicia_EUR:
+          type: number
+          description: Kúpna cena + jednorazové náklady (vypočítané)
         Vlastne_zdroje_EUR:
           type: number
         Uver_vyska_EUR:
@@ -427,6 +448,7 @@ components:
           type: number
         Rocna_hruba_vynosnost_percent:
           type: number
+          description: Ročná výnosnosť v % (počíta sa z celkovej investície)
         Najomnik_meno:
           type: string
         Najomnik_telefon:

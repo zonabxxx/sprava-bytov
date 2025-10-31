@@ -9,6 +9,13 @@ export interface Apartment {
   Kupna_cena_EUR: number | null;
   Vlastne_zdroje_EUR: number | null;
   Uver_vyska_EUR: number | null;
+  Znalec_EUR: number | null;
+  Pravnik_EUR: number | null;
+  Dan_z_prevodu_EUR: number | null;
+  Realitna_provisia_EUR: number | null;
+  Renovacia_vstup_EUR: number | null;
+  Jednorazove_naklady_EUR: number | null;
+  Celkova_investicia_EUR: number | null;
   Urokova_sadzba_p_a_percent: number | null;
   Pocet_rokov_uveru: number | null;
   Banka: string;
@@ -68,29 +75,36 @@ export const COLUMN_MAP: Record<keyof Apartment, number> = {
   Kupna_cena_EUR: 6,
   Vlastne_zdroje_EUR: 7,
   Uver_vyska_EUR: 8,
-  Urokova_sadzba_p_a_percent: 9,
-  Pocet_rokov_uveru: 10,
-  Banka: 11,
-  Datum_zaciatku_uveru: 12,
-  Mesacna_splatka_uveru_EUR: 13,
-  Druzstvo_EUR: 14,
-  Elektrina_EUR: 15,
-  Plyn_EUR: 16,
-  Voda_EUR: 17,
-  Internet_EUR: 18,
-  Ostatne_naklady_EUR: 19,
-  Celkove_mesacne_naklady_bez_uveru_EUR: 20,
-  Najom_brutto_EUR: 21,
-  Cashflow_mesacne_EUR: 22,
-  Rocna_hruba_vynosnost_percent: 23,
-  Najomnik_meno: 24,
-  Najomnik_telefon: 25,
-  Najomnik_email: 26,
-  Zmluva_od: 27,
-  Zmluva_do: 28,
-  Vyska_depozitu_EUR: 29,
-  Stav_platieb: 30,
-  Poznamka: 31,
+  Znalec_EUR: 9,
+  Pravnik_EUR: 10,
+  Dan_z_prevodu_EUR: 11,
+  Realitna_provisia_EUR: 12,
+  Renovacia_vstup_EUR: 13,
+  Jednorazove_naklady_EUR: 14,
+  Celkova_investicia_EUR: 15,
+  Urokova_sadzba_p_a_percent: 16,
+  Pocet_rokov_uveru: 17,
+  Banka: 18,
+  Datum_zaciatku_uveru: 19,
+  Mesacna_splatka_uveru_EUR: 20,
+  Druzstvo_EUR: 21,
+  Elektrina_EUR: 22,
+  Plyn_EUR: 23,
+  Voda_EUR: 24,
+  Internet_EUR: 25,
+  Ostatne_naklady_EUR: 26,
+  Celkove_mesacne_naklady_bez_uveru_EUR: 27,
+  Najom_brutto_EUR: 28,
+  Cashflow_mesacne_EUR: 29,
+  Rocna_hruba_vynosnost_percent: 30,
+  Najomnik_meno: 31,
+  Najomnik_telefon: 32,
+  Najomnik_email: 33,
+  Zmluva_od: 34,
+  Zmluva_do: 35,
+  Vyska_depozitu_EUR: 36,
+  Stav_platieb: 37,
+  Poznamka: 38,
 };
 
 // Helper: konverzia čísla stĺpca na písmeno (0=A, 1=B, ...)

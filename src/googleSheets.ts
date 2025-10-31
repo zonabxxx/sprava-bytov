@@ -5,16 +5,27 @@ import { Apartment, COLUMN_MAP, columnNumberToLetter, parseValue } from './types
 dotenv.config();
 
 // Konfigurácia Google Sheets API
-const auth = new google.auth.GoogleAuth({
-  credentials: {
+let credentials;
+
+// Priorita: Base64 encoded credentials (funguje lepšie v Railway/Vercel)
+if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+  const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString();
+  credentials = JSON.parse(decoded);
+} else {
+  // Fallback: Samostatné premenné
+  credentials = {
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  },
+  };
+}
+
+const auth = new google.auth.GoogleAuth({
+  credentials,
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
 const sheets = google.sheets({ version: 'v4', auth });
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+const SHEET_ID = process.env.GOOGLE_SHEET_ID || process.env.SPREADSHEET_ID; // Podporujeme obe názvy
 const SHEET_NAME = 'bytovy_prehlad_sablona-2'; // Názov sheetu z Google Sheets
 
 // Helper: konvertuje riadok z Google Sheets na objekt Apartment

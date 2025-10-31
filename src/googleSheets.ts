@@ -64,7 +64,7 @@ export async function getRows(): Promise<Apartment[]> {
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: `${SHEET_NAME}!A2:Z`, // Začíname od riadku 2 (riadok 1 je header)
+      range: `${SHEET_NAME}!A2:AZ`, // Rozšírené na AZ (52 stĺpcov)
     });
 
     const rows = response.data.values || [];
@@ -82,7 +82,7 @@ export async function appendRow(apartment: Apartment): Promise<void> {
     
     await sheets.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
-      range: `${SHEET_NAME}!A:Z`,
+      range: `${SHEET_NAME}!A:AZ`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [row],
